@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tcp-services
+  namespace: app-ingress
+data:
+  8080: "app-ingress/service-sample-nodeapp:8080-tcp"

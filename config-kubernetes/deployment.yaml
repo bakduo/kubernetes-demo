@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-node-deploy
+  namespace: app-ingress
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: sample-node
+  template:
+    metadata:
+      labels:
+        app: sample-node
+    spec:
+      containers:
+      - name: sample-node
+        image: registrydocker.oncosmos.com:5000/nodeapp:1.0.2
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+        - name: ID_SERV
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.uid
+        - name: HOSTNAME_CONTAINER
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: HOSTNAME_REAL
+          value: "example.oncosmos.com"
+        - name: SERVICE_CONTAINER_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: CONSUL_SERVER
+          value: "consul-service.oncosmos.com"
+
+              
+      imagePullSecrets:
+      - name: registrydockeroncosmos
